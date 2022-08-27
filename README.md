@@ -3,7 +3,7 @@
 Author: Stephen Schmith
 
 
-INSTALLING THE SERVER
+INSTALLING THE SERVER - test auth
 
 NOTE: I've provided a pre-compiled version of IMServer in the IMServer\bin directory called IMServer.exe. It's not necessary to compile the source code unless you really want to. However, I'll give the instructions for compiling it here, anyway.
 
