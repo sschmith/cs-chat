@@ -2,9 +2,9 @@
 
 Author: Stephen Schmith
 
-=====================
+
 INSTALLING THE SERVER
-=====================
+
 NOTE: I've provided a pre-compiled version of IMServer in the IMServer\bin directory called IMServer.exe. It's not necessary to compile the source code unless you really want to. However, I'll give the instructions for compiling it here, anyway.
 
 IMServer is written in C#. To compile it, you need to have the Microfsoft .NET Framework v4.0 or higher installed on your system. The compilation process has only been tested on Windows 7, but it should work on any version of Windows with .NET 4.0 or higher installed.
@@ -45,9 +45,9 @@ mono IMServer.exe
 
 This functionality has only been tested on Linux Mint 13, but again, there's no reason it shouldn't work on any version of Linux as long as Mono is installed.
 
-=====================
+
 INSTALLING THE CLIENT
-=====================
+
 
 NOTE: As before, I've included pre-compiled .class files in the IMClient/bin directory. These files contain Java bytecode and should run on any Java Virtual Machine implementing Java 1.6 Update 43 or later. To try them out, cd to the IMClient/bin directory and run
 
