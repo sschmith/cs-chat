@@ -23,23 +23,32 @@ namespace IMServer
         private TcpListener tcpListener;    // Listens for incoming connections on the port specified in port.txt.
         private Thread listenThread;        // This thread spawns new client threads every time a client connects to the server.
         private UserList userList;          // Maintains a list of all users. Constructed from users.ul
+        private const int defaultIncomingPort = 52434;
 
         public IMServer()
         // Instantiates the IMServer by initalizing a UserList. 
         // It then starts a new thread which listens for incoming connections.
         {
             // Get the user list.
+            int incomingPort = defaultIncomingPort;
             userList = new UserList();
 
-            // Set the server port number from port.txt.
-            string config = File.ReadAllText("port.txt");
-            string portString = config;
-            int port = Convert.ToInt32(portString);
+            if (File.Exists("port.txt"))
+            {
+                // Set the server port number from port.txt.
+                string config = File.ReadAllText("port.txt");
+                string portString = config;
+                incomingPort = Convert.ToInt32(portString);
+            } 
+            else
+            {
+                Console.WriteLine("Listening on default port...");
+            }
 
             try
             {
                 // Listen for incoming connections on all network interfaces.
-                this.tcpListener = new TcpListener(IPAddress.Any, port);
+                this.tcpListener = new TcpListener(IPAddress.Any, incomingPort);
             }
             catch (Exception e)
             {
