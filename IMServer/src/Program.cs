@@ -36,9 +36,14 @@ namespace IMServer
             if (File.Exists("port.txt"))
             {
                 // Set the server port number from port.txt.
-                string config = File.ReadAllText("port.txt");
-                string portString = config;
-                incomingPort = Convert.ToInt32(portString);
+                try
+                {
+                    incomingPort = Convert.ToInt32(File.ReadAllText("port.txt"));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
             } 
             else
             {
