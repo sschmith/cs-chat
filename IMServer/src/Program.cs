@@ -3,8 +3,9 @@
  * Implements all server functionality, as well as the Main method.
  * 
  * Author: Stephen Schmith
- * Last Modified: 3/18/2013
- * Created in Microsoft Visual Studio Express 2012
+ * Created: 3/18/2013
+ * Last Modified: 08/29/2022
+ * Created in Microsoft Visual Studio Community
  */
 
 using System;
@@ -24,6 +25,7 @@ namespace IMServer
         private Thread listenThread;        // This thread spawns new client threads every time a client connects to the server.
         private UserList userList;          // Maintains a list of all users. Constructed from users.ul
         private const int defaultIncomingPort = 52434;
+        private const String configFileName = "port.txt";   // Convert to some other format for configurations - XML or JSON?
 
         public IMServer()
         // Instantiates the IMServer by initalizing a UserList. 
@@ -33,14 +35,19 @@ namespace IMServer
             int incomingPort = defaultIncomingPort;
             userList = new UserList();
 
-            if (File.Exists("port.txt"))
-            {
+            if (File.Exists(configFileName)) 
+            {    
                 // Set the server port number from port.txt.
                 try
                 {
-                    incomingPort = Convert.ToInt32(File.ReadAllText("port.txt"));
+                    if (int.TryParse(File.ReadAllText(configFileName), out int parsePortNumberResult))
+                    {
+                        incomingPort = parsePortNumberResult;
+                    }
                 }
-                catch (Exception e)
+                // We only need to catch NotSupportedException.
+                // File.Exists on line 37 will only return true if the target file exists and the caller has permission to access it.
+                catch (NotSupportedException e)
                 {
                     Console.WriteLine(e.ToString());
                 }
@@ -55,7 +62,9 @@ namespace IMServer
                 // Listen for incoming connections on all network interfaces.
                 this.tcpListener = new TcpListener(IPAddress.Any, incomingPort);
             }
-            catch (Exception e)
+            // Since we're using IPAddress.Any, we only need to catch improper port configurations.
+            // It might be better to validate the port number configuration first, then this try-catch won't be necessary.
+            catch (ArgumentOutOfRangeException e)
             {
                 Console.WriteLine(e.ToString());
             }
@@ -73,9 +82,9 @@ namespace IMServer
 
             while (true)
             {
-                TcpClient client = this.tcpListener.AcceptTcpClient();
+                TcpClient client = this.tcpListener.AcceptTcpClient();  // Switch to an async method instead. Track clients in a Collection?
 
-                Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));
+                Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));   // Find out if this is a safe way to use threading. Check ThreadPool.
                 clientThread.Start(client);
             }
         }
