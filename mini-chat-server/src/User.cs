@@ -3,35 +3,28 @@
  * Container for user information such as usernames, passwords, and friends lists.
  * 
  * Author: Stephen Schmith
- * Last Modified: 3/12/2013
- * Created in Microsoft Visual Studio Express 2012
+ * Created in Microsoft Visual Studio Code
  */
 
-using System;
 using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.Net.Sockets;
-using System.IO;
 
 namespace IMServer
 {
     class User
     {
-        private string username;
-        private string password;
-        private ArrayList friends;      // Friends are stored in memory since the server is assumed to be up 24/7. 
-                                        // Friends are stored as User objects.
-        private ArrayList messageLog;    // messageLog stores messages delivered to this user when they're offline.
+        private readonly string username;
+        private readonly string password;
+        private readonly ArrayList friends;      // Friends are stored in memory since the server is assumed to be up 24/7. 
+                                                 // Friends are stored as User objects.
+        private readonly ArrayList messageLog;    // messageLog stores messages delivered to this user when they're offline.
         private TcpClient tcpClient;
         private bool isOnline;          // True if this user is online. Otherwise, false.
 
         public User(string u, string p)
         {
-            this.username = u;
-            this.password = p;
+            username = u;
+            password = p;
             isOnline = false;
             tcpClient = null;           // TcpClient set to null until it's initialized.
 
@@ -42,27 +35,27 @@ namespace IMServer
         public bool Online
         // Property for accessing the value of isOnline.
         {
-            get { return this.isOnline; }
-            set { this.isOnline = value; }
+            get { return isOnline; }
+            set { isOnline = value; }
         }
-        
+
         public TcpClient Client
         // Property for accessing this User's tcpClient.
         {
-            get { return this.tcpClient; }
-            set { this.tcpClient = value; }
+            get { return tcpClient; }
+            set { tcpClient = value; }
         }
-       
+
         public string Username
         // Read-only property for getting the value of this.username.
         {
-            get { return this.username; }
+            get { return username; }
         }
 
         public string Password
         // Read-only property for getting the value of this.password.
         {
-            get { return this.password; }
+            get { return password; }
         }
 
         public ArrayList FriendsList
@@ -75,7 +68,7 @@ namespace IMServer
         public void AddFriend(string un)
         // Friends list file is only created if a User adds a friend.
         {
-            User newFriend = new User(un, null);
+            User newFriend = new(un, null);
 
             if (friends.Contains(newFriend))
             {
@@ -84,13 +77,13 @@ namespace IMServer
             }
 
             // Add friend
-            this.friends.Add(newFriend);
+            friends.Add(newFriend);
         }
 
         public bool RemoveFriend(string un)
         // Remove a friend from the friends list.
         {
-            User u = new User(un, null);
+            User u = new(un, null);
 
             if (friends.Contains(u))
             {
@@ -112,13 +105,13 @@ namespace IMServer
         public ArrayList GetMessageLog()
         // Return the messageLog.
         {
-            return this.messageLog;
+            return messageLog;
         }
 
         public void ClearMessageLog()
         // Erase the contents of the message log.
         {
-            this.messageLog.Clear();
+            messageLog.Clear();
         }
 
         public override bool Equals(object obj)
@@ -129,32 +122,29 @@ namespace IMServer
                 return false;
             }
 
-            User u = obj as User;
-            if ((System.Object)u == null)
+            if (obj is not User u)
             {
                 return false;
             }
 
-            return (this.username == u.Username);
+            return username == u.Username;
         }
 
         public bool Equals(User u)
         // Specific Equals method for User objects.
         {
-            if ((object)u == null)
+            if (u == null)
             {
                 return false;
             }
 
-            return (this.username == u.Username);
+            return username == u.Username;
         }
 
         public override int GetHashCode()
         // Create an arbitrary hash code for this class (required for Equals to work properly).
         {
-            return (this.username.GetHashCode() + this.password.GetHashCode()) / 3;
+            return (username.GetHashCode() + password.GetHashCode()) / 3;
         }
-
-
     }
 }

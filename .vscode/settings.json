@@ -1,0 +1,7 @@
+{
+    "editor.defaultFormatter": "ms-dotnettools.vscodeintellicode-csharp",
+    "editor.formatOnSave": true,
+    "[csharp]": {
+        "editor.defaultFormatter": "ms-dotnettools.csharp"
+    }
+}

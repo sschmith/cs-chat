@@ -3,17 +3,11 @@
  * Aggregates User objects and provides methods to access them.
  * 
  * Author: Stephen Schmith
- * Last Modified: 3/14/2013
- * Created in Microsoft Visual Studio Express 2012
+ * Created in Microsoft Visual Studio Code
  */
 
-using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IMServer
 {
@@ -27,8 +21,8 @@ namespace IMServer
          *  Usernames map to User objects.
          */
 
-        private ConcurrentDictionary<string, User> users;
-        
+        private readonly ConcurrentDictionary<string, User> users;
+
         public UserList()
         /*
          * Initialize the user Dictionary and fill it with data from users.ul.
@@ -41,7 +35,7 @@ namespace IMServer
             if (File.Exists("users.ul"))
             {
                 // Usernames are listed first in users.ul, and are followed by a period and then the password associated with that username.
-                StreamReader reader = new StreamReader("users.ul");
+                StreamReader reader = new("users.ul");
                 string line;
 
                 while ((line = reader.ReadLine()) != null)
@@ -50,7 +44,7 @@ namespace IMServer
                     string un = splitted[0];
                     string pass = splitted[1];
 
-                    User u = new User(un, pass);
+                    User u = new(un, pass);
 
                     // Add the username and User object to the dictionary
                     users.TryAdd(un, u);
@@ -64,15 +58,14 @@ namespace IMServer
             {
                 try
                 {
-                    StreamWriter writer = new StreamWriter("users.ul");
+                    StreamWriter writer = new("users.ul");
                     writer.WriteLine("admin.password");
                     writer.Close();
 
-                    User u = new User("admin", "password");
-
+                    User u = new("admin", "password");
                     users.TryAdd("admin", u);
                 }
-                catch(IOException e)
+                catch (IOException e)
                 {
                     System.Console.WriteLine(e);
                 }
@@ -90,10 +83,7 @@ namespace IMServer
         // Returns the user object associated with the username "uname".
         // Returns null if this user doesn't exist.
         {
-            User temp;
-            
-
-            if (users.TryGetValue(uname, out temp))
+            if (users.TryGetValue(uname, out User temp))
                 return temp;
 
             return null;
@@ -103,8 +93,7 @@ namespace IMServer
         // Returns the password associated with the user named "uname".
         // Returns null if the requested username isn't stored in the users Dictionary.
         {
-            User temp;
-            users.TryGetValue(uname, out temp);
+            users.TryGetValue(uname, out User temp);
 
             if (temp == null)
             {
